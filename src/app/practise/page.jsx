@@ -10,7 +10,7 @@ const Page = () => {
   };
 
   return (
-    <div className="flex flex-col items-center font-[family-name:var(--font-geist-sans)] bg-gradient-to-r from-gray-900 to-gray-700 text-white min-h-screen">
+    <div className="flex flex-col items-center bg-gradient-to-r from-gray-900 to-gray-700 text-white min-h-screen">
       <div className="mt-4">
         <button
           onClick={() => handleGridSizeChange(2)}

@@ -24,7 +24,7 @@ export default function Home() {
           </a>
 
           <a
-            href="/practise/4x4/symbols"
+            href="/multiplayer"
             className="bg-gray-800 rounded-lg shadow-md p-6 hover:bg-gray-700 transition cursor-pointer"
           >
             <h2 className="text-xl font-semibold mb-4">Multiplayer</h2>
