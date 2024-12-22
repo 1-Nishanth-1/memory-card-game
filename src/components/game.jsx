@@ -9,7 +9,6 @@ export default function Game({ gridSize }) {
     "/sound/mixkit-quick-win-video-game-notification-269.wav"
   );
 
-  // Check if the URL contains "timed" or "practise" mode
   const isTimedMode =
     typeof window !== "undefined" && window.location.pathname.includes("timed");
   const isPractiseMode =
@@ -98,6 +97,9 @@ export default function Game({ gridSize }) {
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [hasFirstMove, setHasFirstMove] = useState(false);
   const [selectedSet, setSelectedSet] = useState("animals");
+  const [highScore, setHighScore] = useState(
+    () => parseInt(localStorage.getItem(`highScore-${gridSize}`)) || null
+  );
 
   useEffect(() => {
     setCards(generateCards(selectedSet));
@@ -106,6 +108,9 @@ export default function Game({ gridSize }) {
     setTimer(0);
     setIsTimerRunning(false);
     setHasFirstMove(false);
+    setHighScore(
+      () => parseInt(localStorage.getItem(`highScore-${gridSize}`)) || null
+    );
   }, [gridSize, selectedSet]);
 
   useEffect(() => {
@@ -156,6 +161,10 @@ export default function Game({ gridSize }) {
             winSound.play();
             setIsTimerRunning(false);
           }, 500);
+          if ((!highScore || timer < highScore) && isTimedMode) {
+            localStorage.setItem(`highScore-${gridSize}`, timer);
+            setHighScore(timer);
+          }
         }
       } else {
         setTimeout(() => setFlippedCards([]), 1000);
@@ -231,6 +240,7 @@ export default function Game({ gridSize }) {
           Matched Cards: {matchedCount} / {totalCards}
         </p>
         {isTimedMode && <p>Time: {formatTime(timer)}</p>}
+        {highScore && isTimedMode && <p>highScore: {formatTime(highScore)}</p>}
         {matchedCount === totalCards && (
           <p className="text-green-500 font-bold text-xl">You Win! 🎉</p>
         )}
