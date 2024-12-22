@@ -3,11 +3,15 @@ import { useState, useEffect } from "react";
 import "./styles.css";
 
 export default function Game({ gridSize }) {
-  const flipSound = new Audio("/sound/flipcard-91468.mp3");
-  const winSound = new Audio("/sound/success-1-6297.mp3");
-  const matchSound = new Audio(
-    "/sound/mixkit-quick-win-video-game-notification-269.wav"
-  );
+  let flipSound, winSound, matchSound;
+
+  if (typeof window !== "undefined") {
+    flipSound = new Audio("/sound/flipcard-91468.mp3");
+    winSound = new Audio("/sound/success-1-6297.mp3");
+    matchSound = new Audio(
+      "/sound/mixkit-quick-win-video-game-notification-269.wav"
+    );
+  }
 
   const isTimedMode =
     typeof window !== "undefined" && window.location.pathname.includes("timed");
@@ -37,7 +41,7 @@ export default function Game({ gridSize }) {
       "🦝",
     ],
     symbols: [
-      "❤️",
+      "❤",
       "🌈",
       "🔥",
       "🍀",
@@ -83,8 +87,8 @@ export default function Game({ gridSize }) {
     const cardValues = emojiSets[emojiSet].slice(0, totalCards / 2);
     const cards = cardValues
       .flatMap((value) => [
-        { id: `${value}-1`, value, isMatched: false },
-        { id: `${value}-2`, value, isMatched: false },
+        { id: value + "-1", value, isMatched: false },
+        { id: value + "-2", value, isMatched: false },
       ])
       .sort(() => Math.random() - 0.5);
     return cards;
@@ -97,9 +101,7 @@ export default function Game({ gridSize }) {
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [hasFirstMove, setHasFirstMove] = useState(false);
   const [selectedSet, setSelectedSet] = useState("animals");
-  const [highScore, setHighScore] = useState(
-    () => parseInt(localStorage.getItem(`highScore-${gridSize}`)) || null
-  );
+  const [highScore, setHighScore] = useState(null);
 
   useEffect(() => {
     setCards(generateCards(selectedSet));
@@ -133,7 +135,7 @@ export default function Game({ gridSize }) {
       setIsTimerRunning(true);
     }
 
-    flipSound.play();
+    flipSound && flipSound.play();
 
     setFlippedCards([...flippedCards, index]);
 
@@ -154,11 +156,11 @@ export default function Game({ gridSize }) {
         );
         setMatchedCount((prevCount) => prevCount + 2);
         setFlippedCards([]);
-        setTimeout(() => matchSound.play(), 400);
+        setTimeout(() => matchSound && matchSound.play(), 400);
 
         if (matchedCount + 2 === gridSize * gridSize) {
           setTimeout(() => {
-            winSound.play();
+            winSound && winSound.play();
             setIsTimerRunning(false);
           }, 500);
           if ((!highScore || timer < highScore) && isTimedMode) {
