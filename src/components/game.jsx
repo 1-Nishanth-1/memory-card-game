@@ -257,7 +257,7 @@ export default function Game({ gridSize }) {
         {cards.map((card, index) => (
           <div
             key={card.id}
-            className="sm:w-32 w-14 h-20 sm:h-40 perspective"
+            className="lg:w-32 sm:w-24 w-14 h-20 lg:h-40 sm:h-32 perspective"
             onClick={() => handleCardClick(index)}
           >
             <div
